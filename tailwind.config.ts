@@ -16,6 +16,7 @@ const config: Config = {
         accent: '#1E1C1D',
         'accent-gradient': '#847B80',
         'tracker-white': '#F2ECEF',
+        'tracker-gray': '#847B80',
         'tracker-pink': '#EE59A4',
         'tracker-light-pink': '#FAE8F2',
       },

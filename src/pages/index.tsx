@@ -4,12 +4,16 @@ import RiCheckboxFill from '~icons/ri/checkbox-fill';
 import RiCalendarLine from '~icons/ri/calendar-line';
 import RiArchiveLine from '~icons/ri/archive-line';
 import RiArchiveFill from '~icons/ri/archive-fill';
-import RiStickyNote2Fill from '~icons/ri/sticky-note-2-fill';
-import RiStickyNote2Line from '~icons/ri/sticky-note-2-line';
-import { useCallback, useState } from 'react';
+import RiFileEditFill from '~icons/ri/file-edit-fill';
+import RiFileEditLine from '~icons/ri/file-edit-fill';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import TaskItem from '@/components/tasks/TaskItem';
 import Task from '@/utils/models/Task';
 import CreateTask from '@/components/tasks/CreateTask';
+import {
+  HotkeyProvider,
+  useHotkey,
+} from '@/components/providers/HotkeyProvider';
 
 export const inter = Inter({
   display: 'block',
@@ -30,14 +34,57 @@ export default function Home() {
       title: 'my second task',
       isCompleted: false,
     },
+    {
+      id: crypto.randomUUID(),
+      title: 'my third task',
+      isCompleted: false,
+    },
   ]);
-  const [currentTask, setCurrentTask] = useState<Task>(tasks[0]);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { pressedKey } = useHotkey();
+  const prevPressedKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const handleTaskSelection = (direction: 'up' | 'down') => {
+      if (selectedTask === null || tasks.length === 1) {
+        setSelectedTask(tasks[0]);
+        return;
+      }
+
+      const currentIndex = tasks.findIndex(task => task.id === selectedTask.id);
+
+      if (direction === 'up' && currentIndex > 0) {
+        const newIndex = currentIndex - 1;
+        if (tasks[newIndex].id !== selectedTask.id) {
+          setSelectedTask(tasks[newIndex]);
+        }
+      } else if (direction === 'down' && currentIndex < tasks.length - 1) {
+        const newIndex = currentIndex + 1;
+        if (tasks[newIndex].id !== selectedTask.id) {
+          setSelectedTask(tasks[newIndex]);
+        }
+      }
+    };
+
+    if (pressedKey !== prevPressedKeyRef.current) {
+      if (pressedKey === 'ArrowUp') {
+        handleTaskSelection('up');
+      } else if (pressedKey === 'ArrowDown') {
+        handleTaskSelection('down');
+      } else if (pressedKey === 'ArrowRight' && selectedTask) {
+        console.log(selectedTask.id);
+        handleTaskSelected(selectedTask.id);
+      }
+
+      prevPressedKeyRef.current = pressedKey;
+    }
+  }, [pressedKey, selectedTask, tasks]);
 
   const handleTaskUpdate = useCallback(
-    (currentTask: Task, _isCompleted: boolean) => {
+    (selectedTask: Task, _isCompleted: boolean) => {
       setTasks(prevTasks =>
         prevTasks.map(t =>
-          t.id === currentTask.id ? { ...t, isCompleted: _isCompleted } : t
+          t.id === selectedTask.id ? { ...t, isCompleted: _isCompleted } : t
         )
       );
     },
@@ -53,28 +100,47 @@ export default function Home() {
 
   const handleTaskRemove = useCallback(
     (removedTaskId: string) => {
-      setTasks((prevTasks: Task[]) =>
-        prevTasks.filter(task => task.id !== removedTaskId)
-      );
+      setTasks((prevTasks: Task[]) => {
+        const newTasks = prevTasks.filter(task => task.id !== removedTaskId);
+        const removedTaskIndex = prevTasks.findIndex(
+          task => task.id === removedTaskId
+        );
+        let newSelectedTask = null;
+        if (newTasks.length > 0) {
+          if (removedTaskIndex === newTasks.length) {
+            newSelectedTask =
+              newTasks[removedTaskIndex - 1] || newTasks[newTasks.length - 1];
+          } else {
+            newSelectedTask =
+              newTasks[removedTaskIndex] || newTasks[removedTaskIndex - 1];
+          }
+        }
+        setSelectedTask(newSelectedTask);
+        return newTasks;
+      });
     },
     [setTasks]
   );
 
   const handleTaskSelected = useCallback(
-    (selectedTaskId: string) => {
+    (selectedTaskId: string | null) => {
+      if (!selectedTaskId) {
+        setSelectedTask(null);
+        return;
+      }
       const selectedTask = tasks.find(task => task.id === selectedTaskId);
       if (selectedTask) {
-        setCurrentTask(selectedTask);
+        setSelectedTask(selectedTask);
       }
     },
-    [tasks, setCurrentTask]
+    [tasks, setSelectedTask]
   );
 
   return (
     <div className="m-10 mx-auto max-w-3xl font-medium" style={inter.style}>
       <div className="grid grid-cols-1 gap-3">
         {/* <p className="w-fit rounded-xl border border-accent/10 bg-foreground px-3 py-1">
-          {currentTask.title}
+          {selectedTask.title}
         </p> */}
 
         {/* Pomodoro */}
@@ -102,10 +168,10 @@ export default function Home() {
         <div className="flex h-full w-full flex-col gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
           <div className="flex flex-row items-center justify-between text-sm">
             <div className="flex flex-row overflow-hidden rounded-md bg-surface">
-              <button className="inline-flex items-center gap-2 bg-accent px-3 py-2 text-tracker-white">
-                <RiStickyNote2Fill /> Current tasks
+              <button className="inline-flex items-center gap-1 bg-accent px-3 py-2 text-tracker-white">
+                <RiFileEditFill /> Tasks
               </button>
-              <button className="inline-flex items-center gap-2 px-3 py-2">
+              <button className="inline-flex items-center gap-1 px-3 py-2">
                 <RiArchiveLine /> Archived
               </button>
             </div>
@@ -125,7 +191,9 @@ export default function Home() {
                   id={task.id}
                   title={task.title}
                   isCompleted={task.isCompleted}
-                  isSelected={currentTask.id === task.id}
+                  isSelected={
+                    selectedTask ? selectedTask.id === task.id : false
+                  }
                   onDelete={_removedTaskId => handleTaskRemove(_removedTaskId)}
                   onSelected={_selectedId => handleTaskSelected(_selectedId)}
                   onProgressChange={_isCompleted =>
