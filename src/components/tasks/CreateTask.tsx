@@ -1,7 +1,7 @@
 import Task from '@/utils/models/Task';
 import classNames from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
-import KeybindTip from './KeybindTip';
+import Tip from './Tip';
 import { useHotkey } from '../providers/HotkeyProvider';
 
 interface Props {
@@ -36,6 +36,8 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
           id: crypto.randomUUID(),
           isCompleted: false,
           title: taskTitle,
+          createdAt: new Date(Date.now()).toISOString(),
+          elapsedTime: 0,
         });
         setTaskTitle('');
       }
@@ -58,7 +60,7 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
           onClick={() => setIsActive(true)}
           className="inline-flex h-full w-full items-center justify-center gap-1 transition-transform duration-200 ease-in-out md:active:scale-105"
         >
-          Click here or press <KeybindTip keybind={'enter'} />, to add new task
+          Click here or press <Tip keybind={'enter'} /> to add new task
         </button>
       ) : (
         <div className="relative flex h-full min-h-20 w-full flex-col">
@@ -71,8 +73,8 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
             type="text"
           />
           <div className="mx-3 mb-3 flex cursor-default flex-row gap-3 text-xs opacity-50 transition-opacity duration-200 ease-in-out md:hover:opacity-100">
-            <KeybindTip keybind="enter" description="Save" />
-            <KeybindTip keybind="esc" description="Close" />
+            <Tip keybind="enter" description="Save" />
+            <Tip keybind="esc" description="Close" />
           </div>
         </div>
       )}

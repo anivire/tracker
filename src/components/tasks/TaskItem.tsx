@@ -6,14 +6,12 @@ import RiDeleteBin7Fill from '~icons/ri/delete-bin-7-fill';
 import RiArrowRightLine from '~icons/ri/arrow-right-line';
 import RiArrowLeftLine from '~icons/ri/arrow-left-line';
 import Task from '@/utils/models/Task';
-import KeybindTip from './KeybindTip';
+import Tip from './Tip';
 import { useHotkey } from '../providers/HotkeyProvider';
-import { pre } from 'framer-motion/client';
+import formatTrackerTime from '@/utils/formatTrackerTime';
 
 interface Props {
-  id: string;
-  title: string;
-  isCompleted: boolean;
+  task: Task;
   isSelected: boolean;
   onProgressChange: (isCompleted: boolean) => void;
   onSelected: (selectedTaskId: string | null) => void;
@@ -21,9 +19,7 @@ interface Props {
 }
 
 const TaskItem: FC<Props> = ({
-  id,
-  title,
-  isCompleted,
+  task,
   isSelected,
   onProgressChange,
   onSelected,
@@ -39,22 +35,15 @@ const TaskItem: FC<Props> = ({
     } else if (pressedKey === 'ArrowLeft') {
       onProgressChange(false);
     } else if (pressedKey === 'Delete') {
-      onDelete(id);
+      onDelete(task.id);
     }
-    // } else if (pressedKey === ' ') {
-    //   if (isSelected) {
-    //     onSelected(null);
-    //   } else {
-    //     onSelected(id);
-    //   }
-    // }
   }, [pressedKey]);
 
   return (
     <div
-      onClick={() => onSelected(id)}
+      onClick={() => onSelected(task.id)}
       className={classNames(
-        'relative flex w-full cursor-pointer flex-row items-center justify-between overflow-hidden rounded-md text-sm',
+        'relative flex w-full cursor-pointer flex-row items-center justify-between rounded-md text-sm',
         {
           'text-tracker-white': isSelected,
         }
@@ -64,32 +53,49 @@ const TaskItem: FC<Props> = ({
         className={classNames(
           'group flex w-full flex-row flex-wrap justify-between gap-1 rounded-md px-3 py-3',
           {
-            'line-through': isCompleted,
-            'text-fill': isCompleted && !isSelected,
+            'line-through': task.isCompleted,
+            'text-fill': task.isCompleted && !isSelected,
             'cursor-default bg-accent text-tracker-white': isSelected,
             'bg-foreground': !isSelected,
           }
         )}
       >
-        <div className="flex flex-row items-center gap-1">
-          <button onClick={() => onProgressChange(!isCompleted)}>
-            {isCompleted ? <RiCheckboxFill /> : <RiCheckboxBlankLine />}
+        <div className="flex w-full flex-row items-center gap-1">
+          <button onClick={() => onProgressChange(!task.isCompleted)}>
+            {task.isCompleted ? <RiCheckboxFill /> : <RiCheckboxBlankLine />}
           </button>
           <p
             className={classNames(
               'block overflow-hidden hyphens-auto whitespace-normal break-words',
-              { 'max-w-48 sm:max-w-sm md:max-w-lg': isSelected }
+              {
+                'max-w-48 sm:max-w-sm md:max-w-lg': isSelected,
+                'max-w-full': !isSelected,
+              }
             )}
           >
-            {title}
+            {task.title}
           </p>
         </div>
       </div>
 
       {isSelected && (
-        <div className="absolute right-5 flex h-full flex-row gap-2 text-xs">
-          <KeybindTip keybind="del" description="Delete" />
-          <KeybindTip keybind="f1" description="Help" />
+        <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs tabular-nums">
+          {/* <Tip keybind={formatTrackerTime(task.elapsedTime, true)} />
+          <Tip
+            keybind={new Date(task.createdAt).toLocaleString('en-EN', {
+              dateStyle: 'medium',
+            })}
+          /> */}
+          <Tip
+            keybind={<RiArrowLeftLine className="text-sm" />}
+            description="Undone"
+          />
+          <Tip keybind="del" description="Delete" />
+          <Tip
+            keybind={<RiArrowRightLine className="text-sm" />}
+            description="Done"
+          />
+          {/* <Tip keybind="f1" description="Help" /> */}
         </div>
       )}
     </div>

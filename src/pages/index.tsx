@@ -14,6 +14,7 @@ import {
   HotkeyProvider,
   useHotkey,
 } from '@/components/providers/HotkeyProvider';
+import TimerController from '@/components/timer/TimerController';
 
 export const inter = Inter({
   display: 'block',
@@ -23,24 +24,10 @@ export const inter = Inter({
 });
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: crypto.randomUUID(),
-      title: 'my first task',
-      isCompleted: false,
-    },
-    {
-      id: crypto.randomUUID(),
-      title: 'my second task',
-      isCompleted: false,
-    },
-    {
-      id: crypto.randomUUID(),
-      title: 'my third task',
-      isCompleted: false,
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTaskElapsedTime, setSelectedTaskElapsedTime] =
+    useState<number>(0);
   const { pressedKey } = useHotkey();
   const prevPressedKeyRef = useRef<string | null>(null);
 
@@ -90,6 +77,17 @@ export default function Home() {
     },
     [setTasks]
   );
+
+  // const handleTaskUpdateElapsedTime = useCallback(
+  //   (selectedTask: Task, _elapsedTime: number) => {
+  //     setTasks(prevTasks =>
+  //       prevTasks.map(t =>
+  //         t.id === selectedTask.id ? { ...t, elapsedTime: _elapsedTime } : t
+  //       )
+  //     );
+  //   },
+  //   [setTasks]
+  // );
 
   const handleTaskAdd = useCallback(
     (newTask: Task) => {
@@ -144,25 +142,16 @@ export default function Home() {
         </p> */}
 
         {/* Pomodoro */}
-        <div className="flex h-full w-full flex-col items-center gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
-          <div className="flex flex-row gap-5 text-sm">
-            <button className="rounded-md bg-accent px-5 py-2 text-tracker-white">
-              Focus
-            </button>
-            <div className="flex flex-row divide-x-2 divide-foreground rounded-md bg-surface">
-              <button className="px-5 py-2">Short Break</button>
-              <button className="px-5 py-2">Long Break</button>
-            </div>
-          </div>
-          <h1 className="text-7xl font-bold tabular-nums">00:00</h1>
-          <div>
-            <div className="flex flex-row divide-x-2 divide-foreground rounded-md bg-surface">
-              <button className="w-20 py-2">+5 </button>
-              <button className="w-20 py-2">+10 </button>
-              <button className="w-20 py-2">+15 </button>
-            </div>
-          </div>
-        </div>
+        <TimerController
+        // trackedTaskID={selectedTask?.id}
+        // onElapsedTime={(elapsedTime: number) =>
+        //   selectedTask &&
+        //   handleTaskUpdateElapsedTime(selectedTask, elapsedTime)
+        // }
+        // elapsedTime={setCurrentElapsedValue}
+        // onTimerStarted={() => {}}
+        // onTimerStopped={() => {}}
+        />
 
         {/* Tasks */}
         <div className="flex h-full w-full flex-col gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
@@ -188,9 +177,7 @@ export default function Home() {
               {tasks.map(task => (
                 <TaskItem
                   key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  isCompleted={task.isCompleted}
+                  task={task}
                   isSelected={
                     selectedTask ? selectedTask.id === task.id : false
                   }
