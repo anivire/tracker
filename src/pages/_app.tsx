@@ -1,4 +1,4 @@
-import { HotkeyProvider } from '@/components/providers/HotkeyProvider';
+import { HotkeyProvider } from '@/providers/HotkeyProvider';
 import '@/styles/globals.css';
 import { AppProps } from 'next/app';
 

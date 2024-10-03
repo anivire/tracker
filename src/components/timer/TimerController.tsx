@@ -4,7 +4,7 @@ import RiResetLeftFill from '~icons/ri/reset-left-fill';
 import { FC, useEffect, useRef, useState } from 'react';
 import formatTrackerTime from '@/utils/formatTrackerTime';
 import classNames from 'classnames';
-import { useHotkey } from '../providers/HotkeyProvider';
+import { useHotkey } from '../../providers/HotkeyProvider';
 
 interface Props {
   // onElapsedTime: (time: number) => void;

@@ -7,7 +7,7 @@ import RiArrowRightLine from '~icons/ri/arrow-right-line';
 import RiArrowLeftLine from '~icons/ri/arrow-left-line';
 import Task from '@/utils/models/Task';
 import Tip from './Tip';
-import { useHotkey } from '../providers/HotkeyProvider';
+import { useHotkey } from '../../providers/HotkeyProvider';
 import formatTrackerTime from '@/utils/formatTrackerTime';
 
 interface Props {

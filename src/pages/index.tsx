@@ -10,10 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import TaskItem from '@/components/tasks/TaskItem';
 import Task from '@/utils/models/Task';
 import CreateTask from '@/components/tasks/CreateTask';
-import {
-  HotkeyProvider,
-  useHotkey,
-} from '@/components/providers/HotkeyProvider';
+import { HotkeyProvider, useHotkey } from '@/providers/HotkeyProvider';
 import TimerController from '@/components/timer/TimerController';
 
 export const inter = Inter({
