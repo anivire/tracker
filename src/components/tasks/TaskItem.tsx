@@ -30,11 +30,11 @@ const TaskItem: FC<Props> = ({
   useEffect(() => {
     if (!isSelected) return;
 
-    if (pressedKey === 'ArrowRight') {
+    if (pressedKey === 'Shift+ArrowRight') {
       onProgressChange(true);
-    } else if (pressedKey === 'ArrowLeft') {
+    } else if (pressedKey === 'Shift+ArrowLeft') {
       onProgressChange(false);
-    } else if (pressedKey === 'Delete') {
+    } else if (pressedKey === 'Shift+Delete') {
       onDelete(task.id);
     }
   }, [pressedKey]);
@@ -80,22 +80,11 @@ const TaskItem: FC<Props> = ({
 
       {isSelected && (
         <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs tabular-nums">
-          {/* <Tip keybind={formatTrackerTime(task.elapsedTime, true)} />
           <Tip
-            keybind={new Date(task.createdAt).toLocaleString('en-EN', {
-              dateStyle: 'medium',
-            })}
-          /> */}
-          <Tip
-            keybind={<RiArrowLeftLine className="text-sm" />}
-            description="Undone"
-          />
-          <Tip keybind="del" description="Delete" />
-          <Tip
-            keybind={<RiArrowRightLine className="text-sm" />}
+            keybind={['shift', <RiArrowRightLine className="text-sm" />]}
             description="Done"
           />
-          {/* <Tip keybind="f1" description="Help" /> */}
+          <Tip keybind={['shift', 'del']} description="Delete" />
         </div>
       )}
     </div>

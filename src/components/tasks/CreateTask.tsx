@@ -11,7 +11,7 @@ interface Props {
 const CreateTask: FC<Props> = ({ onTaskCreated }) => {
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [isActive, setIsActive] = useState<boolean>(false);
-  const { pressedKey, keyBinds } = useHotkey();
+  const { pressedKey } = useHotkey();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -19,6 +19,20 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
       setTaskTitle('');
       setIsActive(false);
     } else if (pressedKey === 'Enter') {
+      if (isActive) {
+        if (taskTitle !== '') {
+          onTaskCreated({
+            id: crypto.randomUUID(),
+            isCompleted: false,
+            title: taskTitle,
+            createdAt: new Date(Date.now()).toISOString(),
+            elapsedTime: 0,
+          });
+          setTaskTitle('');
+        }
+        return;
+      }
+
       if (!inputRef.current && document.activeElement !== inputRef.current) {
         setIsActive(true);
       }
@@ -27,22 +41,6 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
     if (inputRef.current && document.activeElement !== inputRef.current)
       inputRef.current.focus();
   }, [pressedKey]);
-
-  const onKeyPressed = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      if (taskTitle !== '') {
-        onTaskCreated({
-          id: crypto.randomUUID(),
-          isCompleted: false,
-          title: taskTitle,
-          createdAt: new Date(Date.now()).toISOString(),
-          elapsedTime: 0,
-        });
-        setTaskTitle('');
-      }
-    }
-  };
 
   const onTitleChanged = (title: string) => {
     setTaskTitle(title);
@@ -66,7 +64,6 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
         <div className="relative flex h-full min-h-20 w-full flex-col">
           <input
             ref={inputRef}
-            onKeyDown={e => onKeyPressed(e)}
             value={taskTitle}
             onChange={e => onTitleChanged(e.target.value)}
             className="flex h-auto w-full rounded-xl bg-transparent p-3 outline-none"

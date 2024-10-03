@@ -4,6 +4,7 @@ import RiResetLeftFill from '~icons/ri/reset-left-fill';
 import { FC, useEffect, useRef, useState } from 'react';
 import formatTrackerTime from '@/utils/formatTrackerTime';
 import classNames from 'classnames';
+import { useHotkey } from '../providers/HotkeyProvider';
 
 interface Props {
   // onElapsedTime: (time: number) => void;
@@ -32,6 +33,7 @@ const TimerController: FC<Props> = (
   const [timerType, setTimerType] = useState<
     'focus' | 'short-break' | 'long-break' | 'stopwatch'
   >('focus');
+  const { pressedKey } = useHotkey();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // useEffect(() => {
@@ -95,6 +97,13 @@ const TimerController: FC<Props> = (
       pauseTimer();
     }
   }, [isTimerStarted]);
+
+  useEffect(() => {
+    if (pressedKey === 'Shift+Enter') {
+      if (isTimerStarted) setIsTimerStarted(false);
+      else setIsTimerStarted(true);
+    }
+  }, [pressedKey]);
 
   // useEffect(() => {
   //   const calculatedSpentTime = defaultElapsedTime - elapsedTime;

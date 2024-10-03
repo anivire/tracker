@@ -8,7 +8,6 @@ import React, {
 
 interface HotkeyContextProps {
   pressedKey: string | null;
-  keyBinds: string[];
 }
 
 const HotkeyContext = createContext<HotkeyContextProps | undefined>(undefined);
@@ -19,19 +18,20 @@ interface HotkeyProviderProps {
 
 export const HotkeyProvider: React.FC<HotkeyProviderProps> = ({ children }) => {
   const [pressedKey, setPressedKey] = useState<string | null>(null);
-  const [keyBinds, setKeyBinds] = useState<string[]>([
-    'F1',
-    'Delete',
-    'ArrowDown',
-    'ArrowUp',
-    'ArrowLeft',
-    'ArrowRight',
-    'Enter',
-  ]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      setPressedKey(event.key);
+      if (event.metaKey) {
+        event.preventDefault();
+      }
+
+      let keyCombo = event.key;
+
+      if (event.shiftKey) keyCombo = `Shift+${keyCombo}`;
+      if (event.ctrlKey) keyCombo = `Ctrl+${keyCombo}`;
+      if (event.altKey) keyCombo = `Alt+${keyCombo}`;
+
+      setPressedKey(keyCombo);
     };
 
     const handleKeyUp = () => {
@@ -51,7 +51,6 @@ export const HotkeyProvider: React.FC<HotkeyProviderProps> = ({ children }) => {
     <HotkeyContext.Provider
       value={{
         pressedKey,
-        keyBinds,
       }}
     >
       {children}
