@@ -6,12 +6,13 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useStore';
 import { useHotkey } from '@/providers/HotkeyProvider';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
+  Task,
   addTask,
   removeTask,
   selectTask,
+  updateSelectedTaskStatus,
   updateTaskStatus,
 } from '@/redux/tasksReducer';
-import Task from '@/utils/models/Task';
 import { useCallback } from 'react';
 import RiArchiveLine from '~icons/ri/archive-line';
 import RiCalendarLine from '~icons/ri/calendar-line';
@@ -29,6 +30,7 @@ export default function Pomodoro() {
       dispatch(
         updateTaskStatus({ taskID: task.id, taskIsCompleted: isCompleted })
       );
+      dispatch(updateSelectedTaskStatus({ taskIsCompleted: isCompleted }));
     },
     [dispatch]
   );
@@ -90,6 +92,8 @@ export default function Pomodoro() {
             onTaskSelect={handleTaskSelected}
             onTaskAdd={handleTaskAdd}
           />
+
+          <CurrencyController />
         </section>
       </div>
     </div>

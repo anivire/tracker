@@ -1,9 +1,8 @@
 import { useAppDispatch } from '@/hooks/useStore';
 import { useHotkey } from '@/providers/HotkeyProvider';
 import { AppDispatch } from '@/redux/store';
-import { selectTask } from '@/redux/tasksReducer';
+import { Task, selectTask } from '@/redux/tasksReducer';
 import { taskSelection } from '@/utils/lib/taskUtils';
-import Task from '@/utils/models/Task';
 import { useEffect, useRef } from 'react';
 import React from 'react';
 

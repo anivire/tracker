@@ -1,4 +1,7 @@
-import Task from '@/utils/models/Task';
+import { useAppSelector } from '@/hooks/useStore';
+import { RootState } from '@/redux/store';
+import { Task } from '@/redux/tasksReducer';
+import formatTrackerTime from '@/utils/formatTrackerTime';
 import classNames from 'classnames';
 import { FC, useEffect, useState } from 'react';
 import RiArrowLeftLine from '~icons/ri/arrow-left-line';
@@ -26,6 +29,9 @@ const TaskItem: FC<Props> = ({
   onDelete,
 }) => {
   const { pressedKey } = useHotkey();
+  const selectedTask = useAppSelector(
+    (state: RootState) => state.tasks.selectedTask
+  );
 
   useEffect(() => {
     if (!isSelected) return;
@@ -66,11 +72,7 @@ const TaskItem: FC<Props> = ({
           </button>
           <p
             className={classNames(
-              'block overflow-hidden hyphens-auto whitespace-normal break-words',
-              {
-                'max-w-48 sm:max-w-sm md:max-w-lg': isSelected,
-                'max-w-full': !isSelected,
-              }
+              'block overflow-hidden hyphens-auto whitespace-normal break-words'
             )}
           >
             {task.title}
@@ -78,15 +80,17 @@ const TaskItem: FC<Props> = ({
         </div>
       </div>
 
-      {isSelected && (
-        <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs tabular-nums">
-          <Tip
-            keybind={['shift', <RiArrowRightLine className="text-sm" />]}
-            description="Done"
-          />
-          <Tip keybind={['shift', 'del']} description="Delete" />
+      {isSelected && selectedTask && (
+        <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs tabular-nums bg-accent pl-3">
+          <Tip keybind={formatTrackerTime(selectedTask.elapsedTime)} />
         </div>
       )}
+
+      {/* {!isSelected && selectedTask && (
+        <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs bg-acc tabular-nums bg-foreground pl-3">
+          <Tip keybind={formatTrackerTime(task.elapsedTime)} />
+        </div>
+      )} */}
     </div>
   );
 };

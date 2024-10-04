@@ -1,3 +1,9 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/useStore';
+import { AppDispatch, RootState } from '@/redux/store';
+import {
+  updateSelectedTaskTime,
+  updateTaskTimeByID,
+} from '@/redux/tasksReducer';
 import formatTrackerTime from '@/utils/formatTrackerTime';
 import classNames from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -8,25 +14,9 @@ import RiResetLeftFill from '~icons/ri/reset-left-fill';
 import { useHotkey } from '../../providers/HotkeyProvider';
 import CurrencyController from '../currency/CurrencyController';
 
-interface Props {
-  // onElapsedTime: (time: number) => void;
-  // trackedTaskID?: string;
-  // onTrackedTaskCompleted?: () => void;
-  // elapsedTime: number;
-  // onTimerStopped: () => void;
-  // onTimerStarted: () => void;
-}
+interface Props {}
 
-const TimerController: FC<Props> = (
-  {
-    // onElapsedTime,
-    // trackedTaskID,
-    // onTrackedTaskCompleted,
-    // elapsedTime,
-    // onTimerStarted,
-    // onTimerStopped,
-  }
-) => {
+const TimerController: FC<Props> = () => {
   const DEFAULT_TIME = 1500;
   const [defaultElapsedTime, setDefaultElapsedTime] =
     useState<number>(DEFAULT_TIME);
@@ -37,11 +27,11 @@ const TimerController: FC<Props> = (
   >('focus');
   const { pressedKey } = useHotkey();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // useEffect(() => {
-  //   setElapsedTime(defaultElapsedTime);
-  //   setIsTimerStarted(false);
-  // }, [onTrackedTaskCompleted]);
+  const dispatch = useAppDispatch<AppDispatch>();
+  const tasks = useAppSelector((state: RootState) => state.tasks.tasks);
+  const selectedTask = useAppSelector(
+    (state: RootState) => state.tasks.selectedTask
+  );
 
   const updateDefaultTime = (addedTime: number) => {
     setElapsedTime(prev => prev + addedTime);
@@ -107,6 +97,13 @@ const TimerController: FC<Props> = (
     }
   }, [pressedKey]);
 
+  useEffect(() => {
+    if (selectedTask && !selectedTask.isCompleted) {
+      dispatch(updateSelectedTaskTime());
+      dispatch(updateTaskTimeByID({ taskID: selectedTask.id }));
+    }
+  }, [elapsedTime]);
+
   // useEffect(() => {
   //   const calculatedSpentTime = defaultElapsedTime - elapsedTime;
   //   onElapsedTime(calculatedSpentTime);
@@ -127,12 +124,9 @@ const TimerController: FC<Props> = (
           </button>
         </div>
       </div>
-      <div className="flex flex-col items-center">
-        <h1 className="flex flex-row text-8xl font-bold tabular-nums">
-          {formatTrackerTime(elapsedTime)}
-        </h1>
-        <CurrencyController />
-      </div>
+      <h1 className="flex flex-row text-8xl font-bold tabular-nums">
+        {formatTrackerTime(elapsedTime)}
+      </h1>
       <div>
         <div className="flex flex-row gap-5 overflow-hidden rounded-md text-sm">
           <div className="flex flex-row divide-x-2 divide-foreground overflow-hidden rounded-md bg-surface">

@@ -15,7 +15,7 @@ interface PaymentState {
 
 const initialState: PaymentState = {
   hourlyRate: 35,
-  currency: CurrencyType.Dollar,
+  currency: CurrencyType.Euro,
 };
 
 const paymentSlice = createSlice({

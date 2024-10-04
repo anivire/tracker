@@ -13,15 +13,16 @@ export default function CurrencyController() {
   const timer = useAppSelector((state: RootState) => state.timer);
 
   const getCurrencyIco = (currencyType: CurrencyType) => {
+    console.log(currencyType);
     if (currencyType === CurrencyType.Ruble) {
       return '₽';
-    } else if (CurrencyType.Dollar) {
+    } else if (currencyType === CurrencyType.Dollar) {
       return '$';
-    } else if (CurrencyType.Euro) {
+    } else if (currencyType === CurrencyType.Euro) {
       return '€';
-    } else if (CurrencyType.Pound) {
+    } else if (currencyType === CurrencyType.Pound) {
       return '£';
-    } else if (CurrencyType.Yen) {
+    } else if (currencyType === CurrencyType.Yen) {
       return '¥';
     } else {
       return 'unknown currency';
@@ -36,11 +37,11 @@ export default function CurrencyController() {
         </button>
       </div> */}
       <div className="inline-flex items-center gap-1">
-        <Tip
+        {/* <Tip
           keybind={[formatTrackerTime(timer.time.remaining)]}
           description="x"
           isDefaultTextSize={true}
-        />
+        /> */}
         <Tip
           keybind={[payment.hourlyRate, getCurrencyIco(payment.currency)]}
           description="per hour"

@@ -1,5 +1,12 @@
-import Task from '@/utils/models/Task';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
+export interface Task {
+  id: string;
+  title: string;
+  isCompleted: boolean;
+  elapsedTime: number;
+  createdAt: string;
+}
 
 export interface TasksState {
   tasks: Task[];
@@ -45,6 +52,25 @@ export const tasksSlice = createSlice({
         task.isCompleted = action.payload.taskIsCompleted;
       }
     },
+    updateSelectedTaskStatus: (
+      state,
+      action: PayloadAction<{ taskIsCompleted: boolean }>
+    ) => {
+      if (state.selectedTask) {
+        state.selectedTask.isCompleted = action.payload.taskIsCompleted;
+      }
+    },
+    updateSelectedTaskTime: state => {
+      if (state.selectedTask) {
+        state.selectedTask.elapsedTime += 1;
+      }
+    },
+    updateTaskTimeByID: (state, action: PayloadAction<{ taskID: string }>) => {
+      let updatingTask = state.tasks.find(
+        task => task.id === action.payload.taskID
+      );
+      if (updatingTask) updatingTask.elapsedTime += 1;
+    },
     selectTask: (state, action: PayloadAction<{ taskID: string }>) => {
       state.selectedTask =
         state.tasks.find(task => task.id === action.payload.taskID) ?? null;
@@ -58,6 +84,9 @@ export const tasksSlice = createSlice({
 export const {
   addTask,
   removeTask,
+  updateSelectedTaskTime,
+  updateTaskTimeByID,
+  updateSelectedTaskStatus,
   updateTaskStatus,
   selectTask,
   resetSelectedTask,
