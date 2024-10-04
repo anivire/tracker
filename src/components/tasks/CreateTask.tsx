@@ -1,8 +1,9 @@
 import Task from '@/utils/models/Task';
 import classNames from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
-import Tip from './Tip';
+
 import { useHotkey } from '../../providers/HotkeyProvider';
+import Tip from './Tip';
 
 interface Props {
   onTaskCreated: (newTask: Task) => void;

@@ -1,9 +1,9 @@
 import React, {
+  ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from 'react';
 
 interface HotkeyContextProps {

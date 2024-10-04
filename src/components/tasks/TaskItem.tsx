@@ -1,14 +1,14 @@
+import Task from '@/utils/models/Task';
 import classNames from 'classnames';
 import { FC, useEffect, useState } from 'react';
+import RiArrowLeftLine from '~icons/ri/arrow-left-line';
+import RiArrowRightLine from '~icons/ri/arrow-right-line';
 import RiCheckboxBlankLine from '~icons/ri/checkbox-blank-line';
 import RiCheckboxFill from '~icons/ri/checkbox-fill';
 import RiDeleteBin7Fill from '~icons/ri/delete-bin-7-fill';
-import RiArrowRightLine from '~icons/ri/arrow-right-line';
-import RiArrowLeftLine from '~icons/ri/arrow-left-line';
-import Task from '@/utils/models/Task';
-import Tip from './Tip';
+
 import { useHotkey } from '../../providers/HotkeyProvider';
-import formatTrackerTime from '@/utils/formatTrackerTime';
+import Tip from './Tip';
 
 interface Props {
   task: Task;

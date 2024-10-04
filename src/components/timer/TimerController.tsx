@@ -1,9 +1,10 @@
-import RiPlayFill from '~icons/ri/play-fill';
-import RiPauseFill from '~icons/ri/pause-fill';
-import RiResetLeftFill from '~icons/ri/reset-left-fill';
-import { FC, useEffect, useRef, useState } from 'react';
 import formatTrackerTime from '@/utils/formatTrackerTime';
 import classNames from 'classnames';
+import { FC, useEffect, useRef, useState } from 'react';
+import RiPauseFill from '~icons/ri/pause-fill';
+import RiPlayFill from '~icons/ri/play-fill';
+import RiResetLeftFill from '~icons/ri/reset-left-fill';
+
 import { useHotkey } from '../../providers/HotkeyProvider';
 
 interface Props {

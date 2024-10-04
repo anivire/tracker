@@ -1,14 +1,16 @@
 import Task from '@/utils/models/Task';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface TasksState {
   tasks: Task[];
   selectedTask: Task | null;
+  pomodoroCount: number;
 }
 
 const initialState: TasksState = {
   tasks: [] as Task[],
   selectedTask: null,
+  pomodoroCount: 0,
 };
 
 export const tasksSlice = createSlice({
