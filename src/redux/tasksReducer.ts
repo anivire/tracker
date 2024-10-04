@@ -11,13 +11,13 @@ export interface Task {
 export interface TasksState {
   tasks: Task[];
   archivedTasks: Task[];
-  selectedTask: Task | null;
+  selectedTaskID: string | null;
 }
 
 const initialState: TasksState = {
-  tasks: [] as Task[],
-  archivedTasks: [] as Task[],
-  selectedTask: null,
+  tasks: [],
+  archivedTasks: [],
+  selectedTaskID: null,
 };
 
 export const tasksSlice = createSlice({
@@ -34,12 +34,14 @@ export const tasksSlice = createSlice({
       if (removedTaskIndex !== -1) {
         state.tasks.splice(removedTaskIndex, 1);
 
-        // Change selected task to nearest next or previous existing task
+        // Update selectedTaskID to nearest next or previous existing task
         if (state.tasks.length > 0) {
-          state.selectedTask =
-            state.tasks[removedTaskIndex] ||
-            state.tasks[removedTaskIndex - 1] ||
-            state.tasks[state.tasks.length - 1];
+          state.selectedTaskID =
+            state.tasks[removedTaskIndex]?.id ||
+            state.tasks[removedTaskIndex - 1]?.id ||
+            state.tasks[state.tasks.length - 1].id;
+        } else {
+          state.selectedTaskID = null;
         }
       }
     },
@@ -56,27 +58,57 @@ export const tasksSlice = createSlice({
       state,
       action: PayloadAction<{ taskIsCompleted: boolean }>
     ) => {
-      if (state.selectedTask) {
-        state.selectedTask.isCompleted = action.payload.taskIsCompleted;
+      const task = state.tasks.find(task => task.id === state.selectedTaskID);
+      if (task) {
+        task.isCompleted = action.payload.taskIsCompleted;
       }
     },
     updateSelectedTaskTime: state => {
-      if (state.selectedTask) {
-        state.selectedTask.elapsedTime += 1;
+      const task = state.tasks.find(task => task.id === state.selectedTaskID);
+      if (task) {
+        task.elapsedTime += 1;
       }
     },
     updateTaskTimeByID: (state, action: PayloadAction<{ taskID: string }>) => {
-      let updatingTask = state.tasks.find(
+      const task = state.tasks.find(task => task.id === action.payload.taskID);
+      if (task) task.elapsedTime += 1;
+    },
+    selectTask: (
+      state,
+      action: PayloadAction<{
+        taskID: string;
+        direction: 'up' | 'down' | 'any';
+      }>
+    ) => {
+      const selectedTask = state.tasks.find(
         task => task.id === action.payload.taskID
       );
-      if (updatingTask) updatingTask.elapsedTime += 1;
-    },
-    selectTask: (state, action: PayloadAction<{ taskID: string }>) => {
-      state.selectedTask =
-        state.tasks.find(task => task.id === action.payload.taskID) ?? null;
+
+      if (!selectedTask && state.tasks.length === 0) {
+        return;
+      } else if (!selectedTask || state.tasks.length === 1) {
+        state.selectedTaskID = state.tasks[0].id;
+        return;
+      }
+
+      const currentTaskIndex = state.tasks.findIndex(
+        task => task.id === action.payload.taskID
+      );
+      let newIndex = currentTaskIndex;
+
+      if (action.payload.direction === 'up' && currentTaskIndex > 0) {
+        newIndex = currentTaskIndex - 1;
+      } else if (
+        action.payload.direction === 'down' &&
+        currentTaskIndex < state.tasks.length - 1
+      ) {
+        newIndex = currentTaskIndex + 1;
+      }
+
+      state.selectedTaskID = state.tasks[newIndex].id;
     },
     resetSelectedTask: state => {
-      state.selectedTask = null;
+      state.selectedTaskID = null;
     },
   },
 });

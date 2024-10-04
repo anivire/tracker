@@ -29,8 +29,9 @@ const TaskItem: FC<Props> = ({
   onDelete,
 }) => {
   const { pressedKey } = useHotkey();
-  const selectedTask = useAppSelector(
-    (state: RootState) => state.tasks.selectedTask
+  const tasks = useAppSelector((state: RootState) => state.tasks.tasks);
+  const selectedTaskID = useAppSelector(
+    (state: RootState) => state.tasks.selectedTaskID
   );
 
   useEffect(() => {
@@ -80,15 +81,19 @@ const TaskItem: FC<Props> = ({
         </div>
       </div>
 
-      {isSelected && selectedTask && (
+      {isSelected && selectedTaskID && tasks && (
         <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs tabular-nums bg-accent pl-3">
-          <Tip keybind={formatTrackerTime(selectedTask.elapsedTime)} />
+          <Tip
+            item={formatTrackerTime(
+              tasks.find(task => task.id === selectedTaskID)?.elapsedTime ?? 0
+            )}
+          />
         </div>
       )}
 
       {/* {!isSelected && selectedTask && (
         <div className="absolute right-3 flex h-full flex-row items-center gap-2 text-xs bg-acc tabular-nums bg-foreground pl-3">
-          <Tip keybind={formatTrackerTime(task.elapsedTime)} />
+          <Tip item={formatTrackerTime(task.elapsedTime)} />
         </div>
       )} */}
     </div>

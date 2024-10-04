@@ -29,8 +29,8 @@ const TimerController: FC<Props> = () => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const dispatch = useAppDispatch<AppDispatch>();
   const tasks = useAppSelector((state: RootState) => state.tasks.tasks);
-  const selectedTask = useAppSelector(
-    (state: RootState) => state.tasks.selectedTask
+  const selectedTaskID = useAppSelector(
+    (state: RootState) => state.tasks.selectedTaskID
   );
 
   const updateDefaultTime = (addedTime: number) => {
@@ -98,9 +98,11 @@ const TimerController: FC<Props> = () => {
   }, [pressedKey]);
 
   useEffect(() => {
-    if (selectedTask && !selectedTask.isCompleted) {
+    if (
+      selectedTaskID &&
+      !tasks.find(task => task.id === selectedTaskID)?.isCompleted
+    ) {
       dispatch(updateSelectedTaskTime());
-      dispatch(updateTaskTimeByID({ taskID: selectedTask.id }));
     }
   }, [elapsedTime]);
 

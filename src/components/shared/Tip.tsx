@@ -2,12 +2,12 @@ import classNames from 'classnames';
 import { FC } from 'react';
 
 interface Props {
-  keybind: React.ReactNode | React.ReactNode[];
+  item: React.ReactNode | React.ReactNode[];
   description?: string;
   isDefaultTextSize?: boolean;
 }
 
-const Tip: FC<Props> = ({ keybind, description, isDefaultTextSize }) => {
+const Tip: FC<Props> = ({ item, description, isDefaultTextSize }) => {
   return (
     <div
       className={classNames(
@@ -15,15 +15,15 @@ const Tip: FC<Props> = ({ keybind, description, isDefaultTextSize }) => {
         { 'text-xs': !isDefaultTextSize }
       )}
     >
-      {Array.isArray(keybind) ? (
-        keybind.map(item => (
+      {Array.isArray(item) ? (
+        item.map(_item => (
           <span className="rounded-md bg-surface p-1 px-2 font-black uppercase text-accent/50">
-            {item}
+            {_item}
           </span>
         ))
       ) : (
         <span className="rounded-md bg-surface p-1 px-2 font-black uppercase text-accent/50">
-          {keybind}
+          {item}
         </span>
       )}
       {description}

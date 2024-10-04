@@ -38,12 +38,12 @@ export default function CurrencyController() {
       </div> */}
       <div className="inline-flex items-center gap-1">
         {/* <Tip
-          keybind={[formatTrackerTime(timer.time.remaining)]}
+          item={[formatTrackerTime(timer.time.remaining)]}
           description="x"
           isDefaultTextSize={true}
         /> */}
         <Tip
-          keybind={[payment.hourlyRate, getCurrencyIco(payment.currency)]}
+          item={[payment.hourlyRate, getCurrencyIco(payment.currency)]}
           description="per hour"
           isDefaultTextSize={true}
         />

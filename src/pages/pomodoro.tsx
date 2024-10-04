@@ -21,8 +21,8 @@ import RiFileEditFill from '~icons/ri/file-edit-fill';
 export default function Pomodoro() {
   const dispatch = useAppDispatch<AppDispatch>();
   const tasks = useAppSelector((state: RootState) => state.tasks.tasks);
-  const selectedTask = useAppSelector(
-    (state: RootState) => state.tasks.selectedTask
+  const selectedTaskID = useAppSelector(
+    (state: RootState) => state.tasks.selectedTaskID
   );
 
   const handleTaskUpdate = useCallback(
@@ -51,7 +51,7 @@ export default function Pomodoro() {
 
   const handleTaskSelected = useCallback(
     (selectedTaskId: string | null) => {
-      dispatch(selectTask({ taskID: selectedTaskId ?? '' }));
+      dispatch(selectTask({ taskID: selectedTaskId ?? '', direction: 'any' }));
     },
     [dispatch]
   );
@@ -65,7 +65,7 @@ export default function Pomodoro() {
           <CurrencyController />
         </section> */}
 
-        <section className="flex h-full w-full flex-col gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
+        <section className="flex h-full w-full flex-col gap-3 rounded-xl border border-accent/10 bg-foreground p-5">
           <div className="flex flex-row items-center justify-between text-sm">
             <div className="flex flex-row overflow-hidden rounded-md bg-surface">
               <button className="inline-flex items-center gap-1 bg-accent px-3 py-2 text-tracker-white">
@@ -86,7 +86,7 @@ export default function Pomodoro() {
 
           <TaskController
             tasks={tasks}
-            selectedTask={selectedTask}
+            selectedTaskID={selectedTaskID}
             onTaskRemove={handleTaskRemove}
             onTaskUpdate={handleTaskUpdate}
             onTaskSelect={handleTaskSelected}

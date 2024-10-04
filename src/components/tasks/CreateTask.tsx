@@ -1,4 +1,4 @@
-import Task from '@/utils/models/Task';
+import { Task } from '@/redux/tasksReducer';
 import classNames from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
 
@@ -59,7 +59,7 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
           onClick={() => setIsActive(true)}
           className="inline-flex h-full w-full items-center justify-center gap-1 transition-transform duration-200 ease-in-out md:active:scale-105"
         >
-          Click here or press <Tip keybind={'enter'} /> to add new task
+          Click here or press <Tip item={'enter'} /> to add new task
         </button>
       ) : (
         <div className="relative flex h-full min-h-20 w-full flex-col">
@@ -71,8 +71,8 @@ const CreateTask: FC<Props> = ({ onTaskCreated }) => {
             type="text"
           />
           <div className="mx-3 mb-3 flex cursor-default flex-row gap-3 text-xs opacity-50 transition-opacity duration-200 ease-in-out md:hover:opacity-100">
-            <Tip keybind="enter" description="Save" />
-            <Tip keybind="esc" description="Close" />
+            <Tip item="enter" description="Save" />
+            <Tip item="esc" description="Close" />
           </div>
         </div>
       )}

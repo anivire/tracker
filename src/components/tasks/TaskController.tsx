@@ -2,7 +2,6 @@ import { useAppDispatch } from '@/hooks/useStore';
 import { useHotkey } from '@/providers/HotkeyProvider';
 import { AppDispatch } from '@/redux/store';
 import { Task, selectTask } from '@/redux/tasksReducer';
-import { taskSelection } from '@/utils/lib/taskUtils';
 import { useEffect, useRef } from 'react';
 import React from 'react';
 
@@ -11,7 +10,7 @@ import TaskItem from './TaskItem';
 
 interface TaskControllerProps {
   tasks: Task[];
-  selectedTask: Task | null;
+  selectedTaskID: string | null;
   onTaskRemove: (taskId: string) => void;
   onTaskUpdate: (task: Task, isCompleted: boolean) => void;
   onTaskSelect: (taskId: string | null) => void;
@@ -20,7 +19,7 @@ interface TaskControllerProps {
 
 const TaskController: React.FC<TaskControllerProps> = ({
   tasks,
-  selectedTask,
+  selectedTaskID,
   onTaskRemove,
   onTaskUpdate,
   onTaskSelect,
@@ -35,21 +34,21 @@ const TaskController: React.FC<TaskControllerProps> = ({
       if (pressedKey === 'ArrowUp') {
         dispatch(
           selectTask({
-            taskID: taskSelection(tasks, selectedTask, 'up')?.id || '',
+            taskID: selectedTaskID ?? '',
+            direction: 'up',
           })
         );
       } else if (pressedKey === 'ArrowDown') {
         dispatch(
           selectTask({
-            taskID: taskSelection(tasks, selectedTask, 'down')?.id || '',
+            taskID: selectedTaskID ?? '',
+            direction: 'down',
           })
         );
-      } else if (pressedKey === 'ArrowRight' && selectedTask) {
-        console.log(selectedTask.id);
       }
       prevPressedKeyRef.current = pressedKey;
     }
-  }, [pressedKey, tasks, selectedTask, dispatch]);
+  }, [pressedKey, tasks, selectedTaskID, dispatch]);
 
   return (
     <>
@@ -59,7 +58,7 @@ const TaskController: React.FC<TaskControllerProps> = ({
             <TaskItem
               key={task.id}
               task={task}
-              isSelected={selectedTask?.id === task.id}
+              isSelected={selectedTaskID === task.id}
               onDelete={onTaskRemove}
               onSelected={onTaskSelect}
               onProgressChange={isCompleted => onTaskUpdate(task, isCompleted)}
