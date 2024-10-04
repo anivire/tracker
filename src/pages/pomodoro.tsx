@@ -1,5 +1,6 @@
+import CurrencyController from '@/components/currency/CurrencyController';
 import CreateTask from '@/components/tasks/CreateTask';
-import TaskItem from '@/components/tasks/TaskItem';
+import TaskController from '@/components/tasks/TaskController';
 import TimerController from '@/components/timer/TimerController';
 import { useAppDispatch, useAppSelector } from '@/hooks/useStore';
 import { useHotkey } from '@/providers/HotkeyProvider';
@@ -10,14 +11,10 @@ import {
   selectTask,
   updateTaskStatus,
 } from '@/redux/tasksReducer';
-import { taskRemove, taskSelection } from '@/utils/lib/taskUtils';
 import Task from '@/utils/models/Task';
-import { Inter } from 'next/font/google';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import RiArchiveLine from '~icons/ri/archive-line';
 import RiCalendarLine from '~icons/ri/calendar-line';
-import RiCheckboxBlankLine from '~icons/ri/checkbox-blank-line';
-import RiCheckboxFill from '~icons/ri/checkbox-fill';
 import RiFileEditFill from '~icons/ri/file-edit-fill';
 
 export default function Pomodoro() {
@@ -26,29 +23,6 @@ export default function Pomodoro() {
   const selectedTask = useAppSelector(
     (state: RootState) => state.tasks.selectedTask
   );
-  const prevPressedKeyRef = useRef<string | null>(null);
-  const { pressedKey } = useHotkey();
-
-  useEffect(() => {
-    if (pressedKey !== prevPressedKeyRef.current) {
-      if (pressedKey === 'ArrowUp') {
-        dispatch(
-          selectTask({
-            taskID: taskSelection(tasks, selectedTask, 'up')?.id || '',
-          })
-        );
-      } else if (pressedKey === 'ArrowDown') {
-        dispatch(
-          selectTask({
-            taskID: taskSelection(tasks, selectedTask, 'down')?.id || '',
-          })
-        );
-      } else if (pressedKey === 'ArrowRight' && selectedTask) {
-        console.log(selectedTask.id);
-      }
-      prevPressedKeyRef.current = pressedKey;
-    }
-  }, [pressedKey, tasks, selectedTask, dispatch]);
 
   const handleTaskUpdate = useCallback(
     (task: Task, isCompleted: boolean) => {
@@ -83,11 +57,13 @@ export default function Pomodoro() {
   return (
     <div className="m-10 mx-auto max-w-3xl font-medium">
       <div className="grid grid-cols-1 gap-3">
-        {/* Pomodoro Timer */}
         <TimerController />
 
-        {/* Tasks List */}
-        <div className="flex h-full w-full flex-col gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
+        {/* <section className="flex h-full w-full flex-col gap-5 rounded-xl border border-accent/10 bg-foreground p-3">
+          <CurrencyController />
+        </section> */}
+
+        <section className="flex h-full w-full flex-col gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
           <div className="flex flex-row items-center justify-between text-sm">
             <div className="flex flex-row overflow-hidden rounded-md bg-surface">
               <button className="inline-flex items-center gap-1 bg-accent px-3 py-2 text-tracker-white">
@@ -106,27 +82,15 @@ export default function Pomodoro() {
             </p>
           </div>
 
-          {/* Task Items */}
-          {tasks.length > 0 && (
-            <div className="flex flex-col gap-1">
-              {tasks.map(task => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  isSelected={selectedTask?.id === task.id}
-                  onDelete={handleTaskRemove}
-                  onSelected={handleTaskSelected}
-                  onProgressChange={isCompleted =>
-                    handleTaskUpdate(task, isCompleted)
-                  }
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Create Task Component */}
-          <CreateTask onTaskCreated={handleTaskAdd} />
-        </div>
+          <TaskController
+            tasks={tasks}
+            selectedTask={selectedTask}
+            onTaskRemove={handleTaskRemove}
+            onTaskUpdate={handleTaskUpdate}
+            onTaskSelect={handleTaskSelected}
+            onTaskAdd={handleTaskAdd}
+          />
+        </section>
       </div>
     </div>
   );

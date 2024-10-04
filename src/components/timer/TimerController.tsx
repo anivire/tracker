@@ -6,6 +6,7 @@ import RiPlayFill from '~icons/ri/play-fill';
 import RiResetLeftFill from '~icons/ri/reset-left-fill';
 
 import { useHotkey } from '../../providers/HotkeyProvider';
+import CurrencyController from '../currency/CurrencyController';
 
 interface Props {
   // onElapsedTime: (time: number) => void;
@@ -112,7 +113,7 @@ const TimerController: FC<Props> = (
   // }, [elapsedTime]);
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
+    <section className="flex h-full w-full flex-col items-center gap-5 rounded-xl border border-accent/10 bg-foreground p-5">
       <div className="flex flex-row gap-5 text-sm">
         <button className="rounded-md bg-accent px-5 py-2 text-tracker-white">
           Focus
@@ -126,9 +127,12 @@ const TimerController: FC<Props> = (
           </button>
         </div>
       </div>
-      <h1 className="flex flex-row text-7xl font-bold tabular-nums">
-        {formatTrackerTime(elapsedTime)}
-      </h1>
+      <div className="flex flex-col items-center">
+        <h1 className="flex flex-row text-8xl font-bold tabular-nums">
+          {formatTrackerTime(elapsedTime)}
+        </h1>
+        <CurrencyController />
+      </div>
       <div>
         <div className="flex flex-row gap-5 overflow-hidden rounded-md text-sm">
           <div className="flex flex-row divide-x-2 divide-foreground overflow-hidden rounded-md bg-surface">
@@ -174,7 +178,7 @@ const TimerController: FC<Props> = (
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

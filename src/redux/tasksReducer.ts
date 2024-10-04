@@ -3,14 +3,14 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface TasksState {
   tasks: Task[];
+  archivedTasks: Task[];
   selectedTask: Task | null;
-  pomodoroCount: number;
 }
 
 const initialState: TasksState = {
   tasks: [] as Task[],
+  archivedTasks: [] as Task[],
   selectedTask: null,
-  pomodoroCount: 0,
 };
 
 export const tasksSlice = createSlice({
@@ -26,6 +26,14 @@ export const tasksSlice = createSlice({
       );
       if (removedTaskIndex !== -1) {
         state.tasks.splice(removedTaskIndex, 1);
+
+        // Change selected task to nearest next or previous existing task
+        if (state.tasks.length > 0) {
+          state.selectedTask =
+            state.tasks[removedTaskIndex] ||
+            state.tasks[removedTaskIndex - 1] ||
+            state.tasks[state.tasks.length - 1];
+        }
       }
     },
     updateTaskStatus: (

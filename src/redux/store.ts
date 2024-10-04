@@ -1,11 +1,14 @@
+import paymentReducer from '@/redux/paymentReducer';
 import tasksReducer from '@/redux/tasksReducer';
+import timerReducer from '@/redux/timerReducer';
 import { configureStore } from '@reduxjs/toolkit';
 
 export const store = () =>
   configureStore({
     reducer: {
       tasks: tasksReducer,
-      // timer: timerReducer,
+      payment: paymentReducer,
+      timer: timerReducer,
     },
   });
 

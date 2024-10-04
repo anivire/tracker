@@ -20,21 +20,3 @@ export const taskSelection = (
 
   return tasks[newIndex] || null;
 };
-
-export const taskRemove = (
-  tasks: Task[],
-  removedTaskId: string
-): { newTasks: Task[]; newSelectedTask: Task | null } => {
-  const newTasks = tasks.filter(task => task.id !== removedTaskId);
-  const removedTaskIndex = tasks.findIndex(task => task.id === removedTaskId);
-  let newSelectedTask: Task | null = null;
-
-  if (newTasks.length > 0) {
-    newSelectedTask =
-      newTasks[removedTaskIndex] ||
-      newTasks[removedTaskIndex - 1] ||
-      newTasks[newTasks.length - 1];
-  }
-
-  return { newTasks, newSelectedTask };
-};

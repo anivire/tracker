@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { useHotkey } from '../../providers/HotkeyProvider';
-import Tip from './Tip';
+import Tip from '../shared/Tip';
 
 interface Props {
   onTaskCreated: (newTask: Task) => void;

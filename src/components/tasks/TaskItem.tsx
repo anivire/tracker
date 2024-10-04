@@ -8,7 +8,7 @@ import RiCheckboxFill from '~icons/ri/checkbox-fill';
 import RiDeleteBin7Fill from '~icons/ri/delete-bin-7-fill';
 
 import { useHotkey } from '../../providers/HotkeyProvider';
-import Tip from './Tip';
+import Tip from '../shared/Tip';
 
 interface Props {
   task: Task;
