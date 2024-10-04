@@ -1,6 +1,6 @@
 ## Moduled pomodoro task tracker
 
-## Incoming features:
+## Incoming features
 
 - [ ] Pomodoro timer for focused work sessions,
 - [ ] Standard timer for flexible time tracking,
@@ -9,6 +9,17 @@
 - [ ] Saving sessions,
 - [ ] Dividing tasks by days,
 - [ ] Accounts
+
+## Shortcuts Keybinds
+
+- `Shift + Arrow Right`: mark done,
+- `Shift + Arrow Left`: mark in progress,
+- `Arrow Up`: select previosly task,
+- `Arrow Down`: select next task,
+- `Shift + Delete`: delete task,
+- `Enter`: create task,
+- `Escape`: close task creating field,
+- `Escape + Esacape`: deselect task,
 
 ## Getting Started
 
