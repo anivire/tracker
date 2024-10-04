@@ -6,14 +6,19 @@ import { useHotkey } from '../../providers/HotkeyProvider';
 import Tip from '../shared/Tip';
 
 interface Props {
+  onInputActiveChange: (isActive: boolean) => void;
   onTaskCreated: (newTask: Task) => void;
 }
 
-const CreateTask: FC<Props> = ({ onTaskCreated }) => {
+const CreateTask: FC<Props> = ({ onInputActiveChange, onTaskCreated }) => {
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [isActive, setIsActive] = useState<boolean>(false);
   const { pressedKey } = useHotkey();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    onInputActiveChange(isActive);
+  }, [isActive]);
 
   useEffect(() => {
     if (pressedKey === 'Escape') {

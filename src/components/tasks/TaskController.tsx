@@ -1,8 +1,8 @@
 import { useAppDispatch } from '@/hooks/useStore';
 import { useHotkey } from '@/providers/HotkeyProvider';
 import { AppDispatch } from '@/redux/store';
-import { Task, selectTask } from '@/redux/tasksReducer';
-import { useEffect, useRef } from 'react';
+import { Task, resetSelectedTask, selectTask } from '@/redux/tasksReducer';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 
 import CreateTask from './CreateTask';
@@ -28,6 +28,7 @@ const TaskController: React.FC<TaskControllerProps> = ({
   const dispatch = useAppDispatch<AppDispatch>();
   const prevPressedKeyRef = useRef<string | null>(null);
   const { pressedKey } = useHotkey();
+  const [isInputActive, setIsInputActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (pressedKey !== prevPressedKeyRef.current) {
@@ -45,6 +46,8 @@ const TaskController: React.FC<TaskControllerProps> = ({
             direction: 'down',
           })
         );
+      } else if (pressedKey === 'Escape' && !isInputActive) {
+        dispatch(resetSelectedTask());
       }
       prevPressedKeyRef.current = pressedKey;
     }
@@ -67,7 +70,10 @@ const TaskController: React.FC<TaskControllerProps> = ({
         </div>
       )}
 
-      <CreateTask onTaskCreated={onTaskAdd} />
+      <CreateTask
+        onInputActiveChange={setIsInputActive}
+        onTaskCreated={onTaskAdd}
+      />
     </>
   );
 };
