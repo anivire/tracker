@@ -1,11 +1,14 @@
-## Next Typescript boilerplate
+## Moduled pomodoro task tracker
 
-- [tailwind-css](https://github.com/tailwindlabs/tailwindcss)
-- [unplugin-icons](https://github.com/unplugin/unplugin-icons)
-- [framer-motion](https://github.com/framer/motion)
-- [next-seo](https://github.com/garmeeh/next-seo)
-- [next-sitemap](https://github.com/iamvishnusankar/next-sitemap)
-- [react-responsive](https://github.com/yocontra/react-responsive)
+## Incoming features:
+
+- [ ] Pomodoro timer for focused work sessions,
+- [ ] Standard timer for flexible time tracking,
+- [ ] Simple task manager with arhiving and elapsed time field,
+- [ ] Customizable currency module (set currency type and hourly rate)
+- [ ] Saving sessions,
+- [ ] Dividing tasks by days,
+- [ ] Accounts
 
 ## Getting Started
 
